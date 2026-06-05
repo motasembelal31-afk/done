@@ -3,81 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محلولة | Done</title>
+    <title>محلولة | Done - الواجهة الرئيسية</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div id="splash-screen" class="splash-container">
-        <img src="logo.png" alt="محلولة Logo" class="splash-logo">
+        <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1055/1055661.png'" class="splash-logo" alt="Logo">
+        <div id="typing-text" class="typing-effect"></div>
     </div>
 
-    <div id="main-ui" class="hidden">
-        <header class="top-nav">
-            <img src="logo.png" alt="Logo" class="nav-logo">
-            <span class="nav-title">محلولة</span>
-            <div style="flex-grow: 1; height: 40px;" ondblclick="window.location.href='admin.html'"></div>
-            <button id="loginBtn" class="btn btn-dark" onclick="alert('سيتم تفعيل ربط الجيميل عند رفع المشروع')">تسجيل دخول</button>
-        </header>
+    <header class="top-nav">
+        <div class="nav-logo-group">
+            <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1055/1055661.png'" class="nav-logo" alt="Logo">
+            <span class="nav-title">محلولة (Done)</span>
+        </div>
+        <div style="flex-grow: 1; height: 40px; cursor: default;" onclick="triggerSecretAdmin()"></div>
+        <div id="auth-actions">
+            <button class="btn btn-blue" onclick="simulateGoogleLogin()">تسجيل دخول عبر Gmail</button>
+            <button class="btn btn-outline" style="margin-right: 10px;" onclick="enterAsGuest()">دخول كضيف</button>
+        </div>
+    </header>
 
-        <main class="container">
-            <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
-                <button class="btn btn-brand" style="flex: 1; min-width: 120px;">الطلبات</button>
-                <button class="btn btn-dark" style="flex: 1; min-width: 120px;">المزارع</button>
-                <button class="btn btn-dark" style="flex: 1; min-width: 120px;">المطاعم</button>
-            </div>
+    <div id="customer-market-anchor" class="container">
+        <div style="display: flex; gap: 15px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px;">
+            <button class="btn btn-orange" id="tab-orders" onclick="switchCategory('all')">كل المنتجات</button>
+            <button class="btn btn-outline" id="tab-farms" onclick="switchCategory('farms')">حجز المزارع والشاليهات</button>
+            <button class="btn btn-outline" id="tab-restaurants" onclick="switchCategory('restaurants')">المطاعم والكافيهات</button>
+        </div>
 
-            <h2 style="margin-top: 20px; color: var(--primary-dark);">المنتجات المتوفرة</h2>
-            <div id="productsList" class="grid">
-                
-                <div class="card">
-                    <img src="https://via.placeholder.com/300" alt="صورة المنتج">
-                    <h3>اسم المنتج التجريبي</h3>
-                    <div class="stock-badge">الكمية المتبقية: 5</div>
-                    <div class="price-tag">
-                        <span class="normal-price">عادي: 5 JOD</span>
-                        <span class="fast-price">فوري: 7 JOD</span>
-                    </div>
-                    <div class="input-group">
-                        <select id="orderType">
-                            <option value="normal">توصيل عادي (5 JOD)</option>
-                            <option value="fast">توصيل فوري (7 JOD)</option>
-                        </select>
-                    </div>
-                    <button class="btn btn-brand" style="width: 100%;">اطلب الآن</button>
-                </div>
+        <h2>المنتجات والخدمات المتاحة</h2>
+        <div id="products-marketplace" class="grid"></div>
 
-                <div class="card" style="opacity: 0.7;">
-                    <img src="https://via.placeholder.com/300" alt="صورة المنتج">
-                    <h3>منتج منتهي</h3>
-                    <div class="stock-badge" style="background: var(--danger); color: white;">الكمية المتبقية: 0</div>
-                    <button class="btn btn-disabled" style="width: 100%; margin-top: 45px;" disabled>Sold Out - نفدت الكمية</button>
-                </div>
-
-            </div>
-            
-            <h2 style="margin-top: 40px; color: var(--primary-dark);">طلباتي السابقة</h2>
-            <div class="grid">
-                <div class="card">
-                    <h4>طلب رقم: #1029</h4>
-                    <p>المنتج: اسم المنتج</p>
-                    <p>الحالة: <span style="color: green;">قيد التوصيل</span></p>
-                    <a href="https://wa.me/962771965336?text=مرحبا الدعم الفني، عندي استفسار بخصوص طلبي رقم 1029" target="_blank" class="btn btn-dark" style="margin-top: 10px; width: 100%; font-size: 0.9rem;">واجهت مشكلة؟ تواصل معنا</a>
-                </div>
-            </div>
-
-        </main>
+        <h2 style="margin-top: 50px;">تتبع طلباتي الحالية</h2>
+        <div id="my-orders-panel" class="grid"></div>
     </div>
 
+    <div class="floating-container">
+        <div class="fab fab-ai" onclick="runAIGuide('customer')">🤖</div>
+        <div class="fab fab-wa" onclick="window.open('https://wa.me/962771965336?text=مرحبا الدعم الفني لتطبيق محلولة، أريد الاستفسار عن خدمة...')">💬</div>
+    </div>
+
+    <script src="js/app.js"></script>
     <script>
-        // إزالة شاشة البداية بعد ثانيتين
-        setTimeout(() => {
-            document.getElementById('splash-screen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('splash-screen').classList.add('hidden');
-                document.getElementById('main-ui').classList.remove('hidden');
-            }, 800);
-        }, 2000);
+        let currentCategory = 'all';
+        let isGuest = true;
+
+        function simulateGoogleLogin() {
+            let email = prompt("قم بإدخال بريد الجيميل الخاص بك (حقيقي 100%):", "user@gmail.com");
+            if(email && email.includes('@')) {
+                isGuest = false;
+                sessionStorage.setItem('customer_email', email);
+                document.getElementById('auth-actions').innerHTML = `<span style='font-weight:700;'>${email}</span>`;
+                alert("تم تسجيل الدخول بنجاح عبر حساب Google الخاص بك.");
+                renderCustomerMarket();
+            }
+        }
+
+        function enterAsGuest() {
+            isGuest = true;
+            document.getElementById('auth-actions').innerHTML = `<span style='color: var(--orange); font-weight:700;'>وضع الضيف</span>`;
+            renderCustomerMarket();
+        }
+
+        function switchCategory(cat) {
+            currentCategory = cat;
+            renderCustomerMarket();
+        }
+
+        function renderCustomerMarket() {
+            const grid = document.getElementById('products-marketplace');
+            const allProducts = getProducts();
+            const allStores = getStores();
+            grid.innerHTML = '';
+
+            // تصفية المنتجات حسب القسم والتاجر المعتمد فقط
+            const filtered = allProducts.filter(p => {
+                const store = allStores.find(s => s.id === p.storeId);
+                if (!store || !store.approved) return false;
+                return currentCategory === 'all' || p.category === currentCategory;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align:center; color: var(--text-muted);">لا توجد منتجات متوفرة حالياً في هذا القسم.</p>`;
+            }
+
+            filtered.forEach(p => {
+                const store = allStores.find(s => s.id === p.storeId);
+                const isSoldOut = p.stock <= 0;
+                
+                grid.innerHTML += `
+                    <div class="card" style="${isSoldOut ? 'opacity: 0.6;' : ''}">
+                        <div class="stock-badge ${isSoldOut ? 'sold-out' : ''}">${isSoldOut ? 'Sold Out' : 'متوفر: ' + p.stock}</div>
+                        <h3 style="margin-top: 15px;">${p.name}</h3>
+                        <p style="font-size:0.85rem; color: var(--text-muted); margin-bottom:10px;">المتجر: ${store.name}</p>
+                        <p style="font-size:0.9rem; margin-bottom:15px;">${p.desc || 'لا يوجد وصف متاح للخدمة'}</p>
+                        
+                        <div class="price-container">
+                            <span> توصيل عادي: <span style="color:var(--dark-blue);">${p.priceNormal} JOD</span></span>
+                            <span> توصيل فوري: <span style="color:var(--orange);">${p.priceFast} JOD</span></span>
+                        </div>
+
+                        <div class="input-group">
+                            <label>نوع التوصيل المطلوب:</label>
+                            <select id="delivery-type-${p.id}" ${isSoldOut ? 'disabled' : ''}>
+                                <option value="normal">توصيل عادي (${p.priceNormal} JOD)</option>
+                                <option value="fast">توصيل فوري (${p.priceFast} JOD)</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label>الكمية:</label>
+                            <input type="number" id="qty-${p.id}" value="1" min="1" max="${p.stock}" ${isSoldOut ? 'disabled' : ''}>
+                        </div>
+
+                        <div style="display:flex; gap: 10px;">
+                            ${isSoldOut ? 
+                                `<button class="btn btn-disabled" style="width:100%;" disabled>Sold Out - نفدت الكمية</button>` :
+                                `<button class="btn btn-blue" style="flex:1;" onclick="placeOrder(${p.id})">طلب المنتج</button>`
+                            }
+                            <button class="btn btn-outline" onclick="window.open('https://wa.me/962771965336?text=مرحبا، أريد الاستفسار عن منتج: ${p.name} لدى متجر: ${store.name}')">تواصل مع التاجر</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // رسم طلبات المستخدم الحالي المرقّمة والمربوطة بالدعم
+            const ordersPanel = document.getElementById('my-orders-panel');
+            ordersPanel.innerHTML = '';
+            const allOrders = getOrders();
+            if(allOrders.length === 0) {
+                ordersPanel.innerHTML = `<p style="grid-column:1/-1; color: var(--text-muted);">لم تقم بإجراء أي طلبات بعد.</p>`;
+            }
+            allOrders.forEach(o => {
+                ordersPanel.innerHTML += `
+                    <div class="card" style="border-right: 5px solid var(--orange);">
+                        <h4>رقم الطلب التسلسلي: #<strong>${o.id}</strong></h4>
+                        <p style="margin: 5px 0;">المنتج: ${o.productName} (الكمية: ${o.quantity})</p>
+                        <p style="font-size:0.9rem;">السعر الإجمالي: <strong style="color:var(--orange);">${o.totalPrice} JOD</strong> [توصيل: ${o.deliveryType === 'fast' ? 'فوري 🚀' : 'عادي 🚚'}]</p>
+                        <button class="btn btn-outline" style="width:100%; margin-top:10px; font-size:0.85rem; padding:8px;" onclick="window.open('https://wa.me/962771965336?text=أواجه مشكلة في الطلب رقم #${o.id}')">تواصل مع الدعم الفني للطلب</button>
+                    </div>
+                `;
+            });
+        }
+
+        function placeOrder(productId) {
+            if (isGuest) {
+                alert("عذراً، لا يمكنك إتمام عملية الطلب في وضع الضيف. يرجى تسجيل الدخول أولاً عبر حساب Gmail!");
+                return;
+            }
+            
+            let allProducts = getProducts();
+            let prod = allProducts.find(p => p.id === productId);
+            let qty = parseInt(document.getElementById(`qty-${productId}`).value);
+            let delType = document.getElementById(`delivery-type-${productId}`).value;
+
+            if (qty > prod.stock || qty <= 0) {
+                alert("الكمية المطلوبة غير متوفرة في مخزون التاجر حالياً!");
+                return;
+            }
+
+            // اقتطاع المخزون الفعلي وتحديث البيانات
+            prod.stock -= qty;
+            saveProducts(allProducts);
+
+            let priceEach = delType === 'fast' ? prod.priceFast : prod.priceNormal;
+            let total = priceEach * qty;
+            let orderId = Math.floor(100000 + Math.random() * 900000); // توليد رقم طلب تسلسلي فريد
+
+            let newOrder = {
+                id: orderId,
+                productId: prod.id,
+                productName: prod.name,
+                storeId: prod.storeId,
+                quantity: qty,
+                deliveryType: delType,
+                totalPrice: total,
+                customerEmail: sessionStorage.getItem('customer_email')
+            };
+
+            let allOrders = getOrders();
+            allOrders.push(newOrder);
+            saveOrders(allOrders);
+
+            alert(`تم إرسال طلبك بنظام بنجاح! رقم الطلب الخاص بك: #${orderId}. تم إعلام التاجر والمطور فوراً.`);
+            renderCustomerMarket();
+        }
     </script>
 </body>
 </html>
