@@ -9,51 +9,75 @@
 <body>
 
     <div id="splash-screen" class="splash-container">
-        <div class="splash-content">
-            <img src="https://ibb.co/m549c0ZG" alt="محلولة Logo" class="splash-logo">
-            <h1 id="typing-text" class="typing-effect"></h1>
-        </div>
+        <img src="logo.png" alt="محلولة Logo" class="splash-logo">
     </div>
 
     <div id="main-ui" class="hidden">
         <header class="top-nav">
-            <img src="https://ibb.co/m549c0ZG" alt="Logo" class="nav-logo">
+            <img src="logo.png" alt="Logo" class="nav-logo">
             <span class="nav-title">محلولة</span>
-            <div id="admin-trigger" onclick="promptAdminLogin()"></div>
+            <div style="flex-grow: 1; height: 40px;" ondblclick="window.location.href='admin.html'"></div>
+            <button id="loginBtn" class="btn btn-dark" onclick="alert('سيتم تفعيل ربط الجيميل عند رفع المشروع')">تسجيل دخول</button>
         </header>
 
-        <main class="content-area">
-            <div class="login-section">
-                <button class="btn-raised btn-blue" onclick="loginWithGoogle()">تسجيل الدخول عبر Gmail</button>
+        <main class="container">
+            <div style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+                <button class="btn btn-brand" style="flex: 1; min-width: 120px;">الطلبات</button>
+                <button class="btn btn-dark" style="flex: 1; min-width: 120px;">المزارع</button>
+                <button class="btn btn-dark" style="flex: 1; min-width: 120px;">المطاعم</button>
             </div>
 
-            <section class="categories">
-                <button class="btn-raised btn-orange">الطلبات</button>
-                <button class="btn-raised btn-blue">حجز المزارع والشاليهات</button>
-                <button class="btn-raised btn-orange">حجز المطاعم والكافيهات</button>
-            </section>
-
-            <section class="products-grid">
-                <div class="product-card">
-                    <img src="product-placeholder.jpg" alt="صورة المنتج">
-                    <h3>اسم المنتج</h3>
-                    <div class="prices">
-                        <span class="price-normal">توصيل عادي: 5 دنانير</span>
-                        <span class="price-fast">توصيل فوري: 7 دنانير</span>
+            <h2 style="margin-top: 20px; color: var(--primary-dark);">المنتجات المتوفرة</h2>
+            <div id="productsList" class="grid">
+                
+                <div class="card">
+                    <img src="https://via.placeholder.com/300" alt="صورة المنتج">
+                    <h3>اسم المنتج التجريبي</h3>
+                    <div class="stock-badge">الكمية المتبقية: 5</div>
+                    <div class="price-tag">
+                        <span class="normal-price">عادي: 5 JOD</span>
+                        <span class="fast-price">فوري: 7 JOD</span>
                     </div>
-                    <div class="actions">
-                        <button class="btn-raised btn-orange">طلب المنتج</button>
-                        <button class="btn-raised btn-blue">التفاصيل</button>
+                    <div class="input-group">
+                        <select id="orderType">
+                            <option value="normal">توصيل عادي (5 JOD)</option>
+                            <option value="fast">توصيل فوري (7 JOD)</option>
+                        </select>
                     </div>
-                    <a href="https://wa.me/962771965336" class="btn-support" target="_blank">تواصل مع التاجر</a>
+                    <button class="btn btn-brand" style="width: 100%;">اطلب الآن</button>
                 </div>
-            </section>
-        </main>
 
-        <button id="ai-guide-btn" class="ai-float-btn" onclick="toggleAIGuide()">🤖 دليل</button>
-        <a href="https://wa.me/962771965336" class="whatsapp-float" target="_blank">💬 الدعم</a>
+                <div class="card" style="opacity: 0.7;">
+                    <img src="https://via.placeholder.com/300" alt="صورة المنتج">
+                    <h3>منتج منتهي</h3>
+                    <div class="stock-badge" style="background: var(--danger); color: white;">الكمية المتبقية: 0</div>
+                    <button class="btn btn-disabled" style="width: 100%; margin-top: 45px;" disabled>Sold Out - نفدت الكمية</button>
+                </div>
+
+            </div>
+            
+            <h2 style="margin-top: 40px; color: var(--primary-dark);">طلباتي السابقة</h2>
+            <div class="grid">
+                <div class="card">
+                    <h4>طلب رقم: #1029</h4>
+                    <p>المنتج: اسم المنتج</p>
+                    <p>الحالة: <span style="color: green;">قيد التوصيل</span></p>
+                    <a href="https://wa.me/962771965336?text=مرحبا الدعم الفني، عندي استفسار بخصوص طلبي رقم 1029" target="_blank" class="btn btn-dark" style="margin-top: 10px; width: 100%; font-size: 0.9rem;">واجهت مشكلة؟ تواصل معنا</a>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <script src="js/app.js"></script>
+    <script>
+        // إزالة شاشة البداية بعد ثانيتين
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash-screen').classList.add('hidden');
+                document.getElementById('main-ui').classList.remove('hidden');
+            }, 800);
+        }, 2000);
+    </script>
 </body>
 </html>
