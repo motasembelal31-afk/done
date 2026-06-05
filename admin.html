@@ -3,37 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الكنترول الشامل | MAZA</title>
+    <title>الكنترول الشامل للمطور | MAZA</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        #admin-login {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: var(--primary-dark); display: flex; justify-content: center; align-items: center; z-index: 9999;
-        }
-        .login-box { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; text-align: center; }
-    </style>
 </head>
 <body>
 
-    <div id="admin-login">
-        <div class="login-box">
-            <img src="logo.png" alt="Logo" style="width: 100px; margin-bottom: 20px;">
-            <h2 style="color: var(--primary-dark); margin-bottom: 20px;">بوابة المطور (MAZA)</h2>
-            <div class="input-group">
-                <input type="text" id="adminUser" placeholder="اسم المستخدم">
-            </div>
-            <div class="input-group">
-                <input type="password" id="adminPass" placeholder="كلمة المرور">
-            </div>
-            <button class="btn btn-brand" style="width: 100%;" onclick="verifyAdmin()">دخول للكنترول</button>
-        </div>
-    </div>
+    <script>
+        if(sessionStorage.getItem('done_role') !== 'admin') {
+            alert("غير مصرح بالدخول! يرجى الدخول بالطريقة السرية من واجهة الدخول.");
+            window.location.href = 'index.html';
+        }
+    </script>
 
-    <div id="admin-dashboard" class="hidden">
-        <header class="top-nav" style="background: var(--primary-dark); color: white;">
-            <span class="nav-title" style="-webkit-text-fill-color: white;">كنترول محلولة الموحد</span>
-            <button class="btn" style="background: var(--danger); color: white; margin-right: auto;" onclick="logoutAdmin()">خروج</button>
-        </header>
+    <header class="top-nav" style="background-color: var(--dark-blue); border-bottom:3px solid var(--orange);">
+        <div class="nav-logo-group">
+            <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1055/1055661.png'" class="nav-logo">
+            <span class="nav-title" style="color:white;">لوحة المطور الأعلى (MAZA)</span>
+        </div>
+        <button class="btn btn-orange" onclick="sessionStorage.clear(); window.location.href='index.html';">تسجيل خروج المطور</button>
+    </header>
+
+    <main class="container" id="admin-dashboard-anchor">
+        <h1 style="margin-bottom: 25px;">مراقبة وإدارة صلاحيات النظام الكاملة</h1>
+
+        <div class="grid" style="grid-template-columns: 1fr 1fr;">
+            
+            <div class="card">
+                <h3>إدارة والموافقات على المحلات التجارية والمتاجر</h3>
+                <div id="admin-stores-list" style="margin-top:15px; display:flex; flex-direction:column; gap:15px;"></div>
+            </div>
+
+            <div class="card">
+                <h3>سجل مراقبة العمليات وجدول الطلبيات الشامل الموحد</h3>
+                <div id="admin-orders-list" style="margin-top:15px; display:flex; flex-direction:column; gap:15px;"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        function renderAdminDashboard() {
+            const storesList = document.getElementById('admin-stores-list');
+            const ordersList = document.getElementById('admin-orders-list');
+            
+            const stores = getStores();
+            const orders = getOrders();
+
+            // رسم المتاجر وتفعيل أزرار القبول والرفض
+            storesList.innerHTML = '';
+            if(stores.length === 0) storesList.innerHTML = '<p style="color:var(--text-muted)">لا توجد متاجر مسجلة بالنظام.</p>';
+            
+            stores.forEach(s => {
+                storesList.innerHTML += `
+                    <div style="background: var(--bg-light); padding:15px; border-radius:12px; border-left:4px solid ${s.approved ? 'var(--success)' : 'var(--danger)'}">
+                        <h5>اسم المحل التجاري: <strong>${s.name}</strong></h5>
+                        <p style="font-size:0.85rem; color:var(--text-muted);">الحساب المسؤول: ${s.email} | القسم: ${s.category}</p>
+                        <p style="font-size:0.9rem; font-weight:700;">حالة التفعيل على التطبيق: ${s.approved ? '<span style="color:var(--success)">نشط ويعرض منتجاته</span>' : '<span style="color:var(--danger)">موقوف / بانتظار الموافقة</span>'}</p>
+                        <div style="margin-top:10px; display:flex; gap:10px;">
+                            ${!s.approved ? `<button class="btn btn-blue" style="padding:6px 12px; font-size:0.85rem;" onclick="toggleStoreApproval('${s.id}', true)">موافقة ونشر المتجر</button>` : ''}
+                            ${s.approved ? `<button class="btn btn-outline" style="padding:6px 12px; font-size:0.85rem; border-color:var(--danger); color:var(--danger);" onclick="toggleStoreApproval('${s.id}', false)">إلغاء التفعيل والتعطيل</button>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+
+            // رسم ومراقبة كافة الطلبيات الواردة
+            ordersList.innerHTML = '';
+            if(orders.length === 0) ordersList.innerHTML = '<p style="color:var(--text-muted)">لم يتم إجراء أي عمليات شراء أو حجز بالنظام بعد.</p>';
+            
+            orders.forEach(o => {
+                const targetStore = stores.find(s => s.id === o.storeId);
+                ordersList.innerHTML += `
+                    <div style="background: var(--bg-light); padding:12px; border-radius:10px; font-size:0.9rem;">
+                        <p><strong>الطلب الرقمي المرقم:</strong> #${o.id}</p>
+                        <p>المنتج: ${o.productName} (الكمية: ${o.quantity}) -> المتجر: ${targetStore ? targetStore.name : 'غير معروف'}</p>
+                        <p style="font-size:0.85rem; color:var(--orange);">المشتري: ${o.customerEmail} | طريقة التوصيل: ${o.deliveryType === 'fast' ? 'فوري' : 'عادي'}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleStoreApproval(storeId, status) {
+            let stores = getStores();
+            let target = stores.find(s => s.id === storeId);
+            if(target) {
+                target.approved = status;
+                saveStores(stores);
+                alert(status ? "تمت الموافقة الرسمية على نشر المتجر، وهو متاح حالياً بالواجهة الرئيسية!" : "تم إلغاء تفعيل المتجر وحجبه عن واجهة الزبائن.");
+                renderAdminDashboard();
+            }
+        }
+    </script>
+</body>
+</html>
 
         <main class="container">
             
