@@ -3,68 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التاجر | محلولة</title>
+    <title>لوحة إدارة المتجر | محلولة</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <header class="top-nav">
-        <img src="logo.png" alt="Logo" class="nav-logo">
-        <span class="nav-title">لوحة التاجر</span>
-        <button class="btn btn-brand" style="margin-right: auto;" onclick="window.location.href='index.html'">رجوع للمتجر</button>
+        <div class="nav-logo-group">
+            <img src="logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1055/1055661.png'" class="nav-logo">
+            <span class="nav-title">بوابة التاجر والمالك</span>
+        </div>
+        <button class="btn btn-outline" onclick="window.location.href='index.html'">العودة للموقع الرئيسي</button>
     </header>
 
-    <main class="container">
-        
-        <div class="card" style="margin-bottom: 20px;">
-            <h3>إعداد متجرك (بانتظار موافقة الإدارة)</h3>
-            <div class="input-group">
-                <label>اختر القسم:</label>
-                <select>
-                    <option>الطلبات (المنتجات)</option>
-                    <option>المزارع والشاليهات</option>
-                    <option>المطاعم والكافيهات</option>
-                </select>
-            </div>
-            <button class="btn btn-dark">تقديم طلب النشر للمطور</button>
-        </div>
+    <main class="container" id="merchant-dashboard-anchor">
+        <div class="grid" style="grid-template-columns: 1fr 2fr;">
+            
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="card">
+                    <h3>التسجيل وطلب تفعيل المتجر</h3>
+                    <p style="font-size:0.85rem; color:var(--text-muted); margin: 10px 0;">بعد تعبئة حسابك، يتوجب عليك التواصل معنا للموافقة الفورية من قبل المطور على الرقم الأردني المباشر:</p>
+                    
+                    <button class="btn btn-orange" style="width: 100%; margin-bottom: 15px;" onclick="window.open('https://wa.me/962771965336?text=مرحبا، قمت بإنشاء حساب متجر جديد على محلولة وأطلب الموافقة والتفعيل من المطور.')">
+                        💬 تواصل لتفعيل حسابك (0771965336)
+                    </button>
 
-        <div class="grid">
-            <div class="card">
-                <h3>إضافة وتجديد المنتجات</h3>
-                <div class="input-group">
-                    <label>اسم المنتج:</label>
-                    <input type="text">
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <div class="input-group" style="flex: 1;">
-                        <label>السعر العادي:</label>
-                        <input type="number">
+                    <div class="input-group">
+                        <label>البريد الإلكتروني للتاجر:</label>
+                        <input type="email" id="merchant-email" value="merchant@gmail.com">
                     </div>
-                    <div class="input-group" style="flex: 1;">
-                        <label>السعر الفوري:</label>
-                        <input type="number">
+                    <div class="input-group">
+                        <label>اسم المتجر/المحل التجاري:</label>
+                        <input type="text" id="merchant-store-name" value="مطعم برجر هب">
                     </div>
+                    <div class="input-group">
+                        <label>نوع عمل التاجر المخصص:</label>
+                        <select id="merchant-cat">
+                            <option value="all">الطلبات العامة</option>
+                            <option value="farms">حجز المزارع والشاليهات</option>
+                            <option value="restaurants">المطاعم والكافيهات</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-blue" style="width: 100%;" onclick="registerOrUpdateStore()">حفظ وتحديث المتجر بالنظام</button>
                 </div>
-                <div class="input-group">
-                    <label>الكمية المتوفرة (لتجنب Sold Out):</label>
-                    <input type="number" min="1">
-                </div>
-                <button class="btn btn-brand" style="width: 100%;">نشر/تحديث المنتج</button>
             </div>
 
-            <div class="card">
-                <h3>الطلبات الواردة لمتجري</h3>
-                <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; margin-bottom: 10px; border-right: 4px solid var(--primary-dark);">
-                    <p><strong>رقم الطلب:</strong> #1029</p>
-                    <p><strong>المنتج:</strong> اسم المنتج</p>
-                    <p><strong>نوع التوصيل:</strong> فوري (7 JOD)</p>
-                    <button class="btn btn-dark" style="margin-top: 10px;">تأكيد وتجهيز الطلب</button>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="card" id="product-add-form">
+                    <h3>إضافة وتجديد منتجات المتجر</h3>
+                    <div class="input-group" style="margin-top:15px;">
+                        <label>اسم المنتج الفعلي:</label>
+                        <input type="text" id="prod-name" placeholder="مثال: وجبة عائلية، شاليهVIP مسبح ساخن...">
+                    </div>
+                    <div class="input-group">
+                        <label>وصف وتفاصيل الخدمة أو المنتج:</label>
+                        <textarea id="prod-desc" rows="2" placeholder="أدخل تفاصيل ومميزات العرض..."></textarea>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div class="input-group" style="flex:1;">
+                            <label>السعر بالتوصيل العادي (JOD):</label>
+                            <input type="number" id="prod-price-normal" step="0.1">
+                        </div>
+                        <div class="input-group" style="flex:1;">
+                            <label>السعر بالتوصيل الفوري (JOD):</label>
+                            <input type="number" id="prod-price-fast" step="0.1">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>الكمية المتوفرة بالمخزون حالياً:</label>
+                        <input type="number" id="prod-stock" min="1" value="10">
+                    </div>
+                    <button class="btn btn-orange" style="width:100%;" onclick="merchantAddProduct()">نشر العرض وتحديثه على التطبيق بالحال</button>
+                </div>
+
+                <div class="card">
+                    <h3>لوحة الطلبات الآتية الخاصة بمتجرك</h3>
+                    <div id="merchant-specific-orders" style="margin-top: 15px; display: flex; flex-direction: column; gap: 15px;"></div>
                 </div>
             </div>
+
         </div>
-
     </main>
 
+    <div class="floating-container">
+        <div class="fab fab-ai" onclick="runAIGuide('merchant')">🤖</div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        function registerOrUpdateStore() {
+            const email = document.getElementById('merchant-email').value;
+            const name = document.getElementById('merchant-store-name').value;
+            const cat = document.getElementById('merchant-cat').value;
+
+            let stores = getStores();
+            let existing = stores.find(s => s.email === email);
+
+            if (existing) {
+                existing.name = name;
+                existing.category = cat;
+                alert("تم تحديث بيانات متجرك بنجاح بالنظام المحلي.");
+            } else {
+                stores.push({
+                    id: 'store_' + Date.now(),
+                    name: name,
+                    category: cat,
+                    approved: false, // بانتظار موافقة المطور المباشرة
+                    email: email
+                });
+                alert("تم تسجيل متجرك الجديد بنجاح! وهو الآن (بانتظار موافقة المطور من لوحة التحكم) ليظهر للزبائن.");
+            }
+            saveStores(stores);
+            renderMerchantDashboard();
+        }
+
+        function merchantAddProduct() {
+            const email = document.getElementById('merchant-email').value;
+            const stores = getStores();
+            const currentStore = stores.find(s => s.email === email);
+
+            if(!currentStore) {
+                alert("خطأ: يرجى حفظ المتجر أولاً لتثبيت المعرف الخاص بك!");
+                return;
+            }
+
+            const name = document.getElementById('prod-name').value;
+            const desc = document.getElementById('prod-desc').value;
+            const pNormal = parseFloat(document.getElementById('prod-price-normal').value);
+            const pFast = parseFloat(document.getElementById('prod-price-fast').value);
+            const stock = parseInt(document.getElementById('prod-stock').value);
+
+            if(!name || isNaN(pNormal) || isNaN(pFast) || isNaN(stock)) {
+                alert("يرجى تعبئة كافة البيانات والأسعار بشكل هندسي سليم وصحيح!");
+                return;
+            }
+
+            let products = getProducts();
+            products.push({
+                id: Math.floor(1000 + Math.random() * 9000),
+                storeId: currentStore.id,
+                name: name,
+                desc: desc,
+                priceNormal: pNormal,
+                priceFast: pFast,
+                stock: stock,
+                category: currentStore.category
+            });
+
+            saveProducts(products);
+            alert("تم نشر وتحديث المنتج الجديد في قاعدة بيانات النظام بنجاح!");
+            
+            // مسح الحقول للإدخال التالي
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-desc').value = '';
+            renderMerchantDashboard();
+        }
+
+        function renderMerchantDashboard() {
+            const email = document.getElementById('merchant-email').value;
+            const stores = getStores();
+            const currentStore = stores.find(s => s.email === email);
+            const orderListContainer = document.getElementById('merchant-specific-orders');
+            
+            orderListContainer.innerHTML = '';
+
+            if(!currentStore) {
+                orderListContainer.innerHTML = '<p style="color:var(--text-muted)">قم بتثبيت حساب متجرك أولاً لعرض طلبات زبائنك.</p>';
+                return;
+            }
+
+            const allOrders = getOrders();
+            const myOrders = allOrders.filter(o => o.storeId === currentStore.id);
+
+            if(myOrders.length === 0) {
+                orderListContainer.innerHTML = '<p style="color:var(--text-muted)">لا توجد طلبات جديدة موجهة لمتجرك حالياً.</p>';
+                return;
+            }
+
+            myOrders.forEach(o => {
+                orderListContainer.innerHTML += `
+                    <div style="background: var(--bg-light); padding: 15px; border-radius:12px; border-right: 4px solid var(--dark-blue);">
+                        <h5>رقم الطلب الموحد: #<strong>${o.id}</strong></h5>
+                        <p style="font-size:0.9rem; margin:4px 0;">المنتج المطلـوب: <strong>${o.productName}</strong> (الكمية: ${o.quantity})</p>
+                        <p style="font-size:0.85rem; color: var(--dark-blue);">نوع التوصيل: ${o.deliveryType === 'fast' ? 'فوري 🚀' : 'عادي 🚚'} | إجمالي السعر: ${o.totalPrice} JOD</p>
+                        <p style="font-size:0.8rem; color: var(--text-muted);">حساب المشتري: ${o.customerEmail}</p>
+                    </div>
+                `;
+            });
+        }
+    </script>
 </body>
 </html>
