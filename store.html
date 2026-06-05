@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التاجر | محلولة</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .store-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .store-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--orange-accent);
+        }
+        .store-panel h3 { color: var(--dark-blue); margin-top: 0; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%; padding: 10px; border-radius: 6px;
+            border: 1px solid #ccc; font-family: inherit; box-sizing: border-box;
+        }
+        .orders-list {
+            background: var(--white-basic);
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .order-item {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px; margin-bottom: 10px;
+        }
+        .order-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    </style>
+</head>
+<body>
+
+    <header class="top-nav">
+        <img src="https://ibb.co/m549c0ZG" alt="Logo" class="nav-logo" style="width: 40px;">
+        <span class="nav-title">محلولة - لوحة التاجر</span>
+        <button class="btn-raised btn-blue" style="margin-right: auto; padding: 5px 15px;" onclick="simulateGmailLogin()">تسجيل دخول Gmail</button>
+    </header>
+
+    <main class="store-container" id="merchant-dashboard" style="display: none;">
+        
+        <div class="store-panel">
+            <h3>إعداد المتجر</h3>
+            <div class="input-group">
+                <label>اختر تصنيف عملك لإضافتك تلقائياً للواجهة:</label>
+                <select>
+                    <option>قسم الطلبات (منتجات)</option>
+                    <option>قسم حجز المزارع والشاليهات</option>
+                    <option>قسم المطاعم والكافيهات</option>
+                </select>
+            </div>
+            <button class="btn-raised btn-blue">حفظ التصنيف</button>
+        </div>
+
+        <div class="store-panel">
+            <h3>إضافة منتج جديد</h3>
+            <div class="input-group">
+                <label>صورة المنتج:</label>
+                <input type="file" accept="image/*">
+            </div>
+            <div class="input-group">
+                <label>اسم المنتج:</label>
+                <input type="text" placeholder="أدخل اسم المنتج...">
+            </div>
+            <div class="input-group">
+                <label>الوصف والتفاصيل:</label>
+                <textarea rows="3" placeholder="اكتب تفاصيل المنتج..."></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group">
+                    <label>سعر التوصيل العادي:</label>
+                    <input type="number" placeholder="مثال: 5">
+                </div>
+                <div class="input-group">
+                    <label>سعر التوصيل الفوري:</label>
+                    <input type="number" placeholder="مثال: 7">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>الكمية المتوفرة:</label>
+                <input type="number" placeholder="الكمية المتاحة للطلب...">
+            </div>
+            <button class="btn-raised btn-orange" style="width: 100%;">رفع المنتج</button>
+        </div>
+
+        <div class="store-panel">
+            <h3>طلبات الزبائن (النماذج الواردة)</h3>
+            <div class="orders-list">
+                <div class="order-item">
+                    <strong>الزبون:</strong> أحمد <br>
+                    <strong>المنتج:</strong> ساعة ذكية - <strong>الكمية:</strong> 1 <br>
+                    <strong>نوع الطلب:</strong> <span style="color: var(--orange-accent); font-weight: bold;">توصيل فوري</span>
+                    <br><button class="btn-raised btn-blue" style="padding: 5px 10px; margin-top: 10px; font-size: 0.9rem;">قبول الطلب</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <button id="ai-guide-btn" class="ai-float-btn" onclick="toggleMerchantAIGuide()">🤖 دليل التاجر</button>
+    <a href="https://wa.me/962771965336" class="whatsapp-float" target="_blank">💬 الدعم الفني للمطور</a>
+
+    <script>
+        // دالة وهمية لإظهار لوحة التحكم بعد تسجيل دخول الجيميل
+        function simulateGmailLogin() {
+            alert("تم تسجيل الدخول بنجاح عبر Gmail!");
+            document.getElementById('merchant-dashboard').style.display = 'block';
+        }
+
+        // دليل الذكاء الاصطناعي الخاص بالتاجر
+        function toggleMerchantAIGuide() {
+            alert("🤖 أهلاً بك كشريك في 'محلولة'! \n1. اختر قسمك من 'إعداد المتجر'.\n2. ارفع صور منتجاتك وحدد السعرين (العادي والفوري).\n3. راقب قسم 'طلبات الزبائن' بالأسفل لاستقبال نماذج الشراء مباشرة.\n4. إذا واجهت مشكلة، اضغط على زر الدعم للتواصل مع المطور عبر الواتساب.");
+        }
+    </script>
+</body>
+</html>
